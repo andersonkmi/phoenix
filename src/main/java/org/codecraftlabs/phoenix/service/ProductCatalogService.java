@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 public class ProductCatalogService {
-    private static Map<String, Product> productCatalog = new HashMap<>();
+    private static final Map<String, Product> productCatalog = new HashMap<>();
 
     @PostMapping("/product")
     public String addProduct(@RequestBody Product product) {
