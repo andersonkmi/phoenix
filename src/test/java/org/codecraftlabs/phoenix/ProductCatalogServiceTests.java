@@ -1,6 +1,5 @@
 package org.codecraftlabs.phoenix;
 
-import org.codecraftlabs.phoenix.service.Product;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.MethodOrderer;
@@ -15,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,10 +54,26 @@ public class ProductCatalogServiceTests {
                 .andExpect(content().json("[" + getCreateProductData() + "]"));
     }
 
+    @Test
+    @Order(4)
+    public void testUpdateProduct() throws Exception {
+        this.mvc.perform(put("/product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(getUpdateProductData().toString()))
+                .andExpect(status().isOk());
+    }
+
     private JSONObject getCreateProductData() throws JSONException {
         JSONObject createProductData = new JSONObject();
         createProductData.put("id", "test-product-1");
         createProductData.put("title", "Test product 001");
         return createProductData;
+    }
+
+    public JSONObject getUpdateProductData() throws JSONException {
+        JSONObject updateProductData = new JSONObject();
+        updateProductData.put("id", "test-product-1");
+        updateProductData.put("title", "Test product 001 updated title");
+        return updateProductData;
     }
 }
