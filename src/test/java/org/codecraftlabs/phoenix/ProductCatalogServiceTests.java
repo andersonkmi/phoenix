@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -60,6 +61,14 @@ public class ProductCatalogServiceTests {
         this.mvc.perform(put("/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getUpdateProductData().toString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(5)
+    public void testDeleteProduct() throws Exception {
+        String testProductId = getCreateProductData().getString("id");
+        this.mvc.perform(delete("/product/" + testProductId))
                 .andExpect(status().isOk());
     }
 
