@@ -13,7 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -29,7 +31,27 @@ public class ProductCatalogServiceTests {
         this.mvc.perform(post("/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getCreateProductData().toString())
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(2)
+    public void testGetProductDetails() throws Exception {
+        String productId = getCreateProductData().getString("id");
+        this.mvc.perform(get("/product/" + productId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(getCreateProductData().toString()));
+    }
+
+    @Test
+    @Order(3)
+    public void testGetProductList() throws Exception {
+        this.mvc.perform(get("/product")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[" + getCreateProductData() + "]"));
     }
 
     private JSONObject getCreateProductData() throws JSONException {
